@@ -19,11 +19,11 @@ class CustomButton extends StatelessWidget {
     final bool isDisabled = onPressed == null;
 
     return FloatingActionButton(
-      shape: CircleBorder(),
       heroTag: heroTag,
-      backgroundColor: isDisabled ? Colors.grey : activeColor,
+      backgroundColor: isDisabled ? Colors.grey.shade400 : activeColor,
+      elevation: isDisabled ? 0 : 3,
       onPressed: onPressed,
-      child: Icon(icon, color: Colors.white),
+      child: Icon(icon, color: Colors.white, size: 28),
     );
   }
 }

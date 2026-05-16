@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hello_world_app/config/theme/app_theme.dart';
 import 'package:hello_world_app/presentation/widgets/buttons/custom_button.dart';
 
 class CounterFunctionsScreen extends StatefulWidget {
@@ -14,56 +15,73 @@ class _CounterFunctionsScreenState extends State<CounterFunctionsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Counter Functions'),
-          leading: IconButton(
-            icon: Icon(
-              Icons.refresh_outlined,
-              color: counter == 0 ? Colors.grey : Colors.orange,
+      appBar: AppBar(
+        title: const Text('Counter'),
+        leading: IconButton(
+          tooltip: 'Reset',
+          icon: Icon(
+            Icons.refresh_rounded,
+            color: counter == 0 ? Colors.white38 : Colors.white,
+          ),
+          onPressed: counter == 0
+              ? null
+              : () => setState(() => counter = 0),
+        ),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 40),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    counter.toString(),
+                    style: const TextStyle(
+                      fontSize: 100,
+                      fontWeight: FontWeight.w200,
+                      color: AppTheme.primary,
+                      height: 1,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    counter == 1 ? 'Click' : 'Clicks',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: AppTheme.textSecondary,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            onPressed: counter == 0 ? null : () {
-              setState(() {
-                counter = 0;
-              });
-            },
           ),
         ),
-        body: Center(
-          child:  Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(counter.toString(), style: TextStyle(fontSize: 160, fontWeight: FontWeight.w300),),
-              SizedBox(height: 20),
-              Text( counter == 1 ? 'Click' : 'Clicks', style: TextStyle(fontSize: 24),),
-            ],
+      ),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomButton(
+            heroTag: 'increment',
+            activeColor: const Color(0xFF2E7D32),
+            icon: Icons.add_rounded,
+            onPressed: () => setState(() => counter++),
           ),
-        ),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomButton(
-              heroTag: 'increment',
-              activeColor: Colors.green,
-              icon: Icons.plus_one_outlined,
-              onPressed: () {
-                setState(() {
-                  counter++;
-                });
-              },
-            ),
-            SizedBox(height: 5),
-            CustomButton(
-              heroTag: 'decrement',
-              activeColor: Colors.red,
-              icon: Icons.exposure_minus_1_outlined,
-              onPressed: counter == 0 ? null : () {
-                setState(() {
-                  counter--;
-                });
-              },
-            ),
-          ],
-        )
-      );
+          const SizedBox(height: 12),
+          CustomButton(
+            heroTag: 'decrement',
+            activeColor: const Color(0xFFC62828),
+            icon: Icons.remove_rounded,
+            onPressed: counter == 0
+                ? null
+                : () => setState(() => counter--),
+          ),
+        ],
+      ),
+    );
   }
 }

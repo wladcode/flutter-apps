@@ -1,0 +1,16 @@
+{
+  "name": "flutter-dart-mcp",
+  "version": "1.0.0",
+  "description": "Flutter & Dart MCP server — exposes Flutter/Dart CLI tools to Cursor AI agents",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

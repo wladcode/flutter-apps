@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "flutter-dart": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--volume", "${workspaceFolder}:/workspace",
+        "flutter-dart-mcp:latest"
+      ]
+    }
+  }
+}

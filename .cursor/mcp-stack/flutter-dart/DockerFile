@@ -1,0 +1,33 @@
+# syntax=docker/dockerfile:1
+
+# Flutter + Dart MCP Server
+# Build: docker build -t flutter-dart-mcp:latest -f DockerFile .
+# The server communicates over stdio (MCP protocol).
+
+FROM ghcr.io/cirruslabs/flutter:stable
+
+# Install Node.js 20 LTS (runtime for the MCP server)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl ca-certificates && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+# Accept Flutter SDK license and run a warm-up to populate the cache
+RUN flutter precache --universal && flutter doctor --suppress-analytics
+
+WORKDIR /mcp
+
+# Install MCP server dependencies
+COPY package.json ./
+RUN npm install --omit=dev
+
+# Copy MCP server entrypoint
+COPY server.mjs ./
+
+# Workspace projects are expected to be mounted at /workspace
+VOLUME ["/workspace"]
+
+ENV FLUTTER_SUPPRESS_ANALYTICS=true
+
+ENTRYPOINT ["node", "server.mjs"]

@@ -33,7 +33,7 @@ class MessageFieldBox extends StatelessWidget {
           },
           icon: Icon(Icons.send_outlined),
         ),
-        hintText: 'Write your message here',
+        hintText: 'End message with ?',
       ),
 
       onFieldSubmitted: (value) {

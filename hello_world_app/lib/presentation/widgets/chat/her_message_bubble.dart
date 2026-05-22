@@ -32,7 +32,7 @@ class HerMessageBubble extends StatelessWidget {
 }
 
 class _ImageBubble extends StatelessWidget {
-  const _ImageBubble({super.key});
+  const _ImageBubble();
 
   @override
   Widget build(BuildContext context) {

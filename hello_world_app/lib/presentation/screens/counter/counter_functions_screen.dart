@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hello_world_app/config/theme/app_theme.dart';
-import 'package:hello_world_app/presentation/widgets/buttons/custom_button.dart';
+import 'package:hello_world_app/presentation/widgets/_components/buttons/custom_button.dart';
 
 class CounterFunctionsScreen extends StatefulWidget {
   const CounterFunctionsScreen({super.key});

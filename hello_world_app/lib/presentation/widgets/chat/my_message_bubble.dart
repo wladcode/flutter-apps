@@ -17,7 +17,7 @@ class MyMessageBubble extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Padding(padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10), 
-          child: Text('${message.fromWho.name}: ${message.text}', style: TextStyle(color: Colors.white))),
+          child: Text(message.text, style: TextStyle(color: Colors.white))),
         ),
         const SizedBox(height: 5),
       ],

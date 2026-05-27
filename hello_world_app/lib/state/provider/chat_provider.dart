@@ -15,23 +15,27 @@ class ChatProvider extends ChangeNotifier {
     if (text.isEmpty) return;
     final newMessage = Message(text: text, fromWho: FromWho.me);
     messages.add(newMessage);
-
-    
-    await herReply(newMessage.text);
-    
     notifyListeners();
     await moveScrollToBottom();
+    await herReply(newMessage.text);
   }
 
   Future<void> herReply(String message) async {
-    Message response = Message(text: 'lorem ipsum dolor sit amet', imageUrl: null, fromWho: FromWho.her);
+    try {
+      Message response = Message(text: 'lorem ipsum dolor sit amet', imageUrl: null, fromWho: FromWho.her);
 
-    if (message.contains('?')) {
-      response = await _getYesNoAnswer.getAnswer();
+      if (message.contains('?')) {
+        response = await _getYesNoAnswer.getAnswer();
+      }
+      messages.add(response);
+      notifyListeners();
+      await moveScrollToBottom();
+    } catch (e) {
+      Message errorMessage = Message(text: 'Sorry, something went wrong', fromWho: FromWho.her);
+      messages.add(errorMessage);
+      notifyListeners();
+      await moveScrollToBottom();
     }
-    messages.add(response);
-    notifyListeners();
-    await moveScrollToBottom();
   }
 
 

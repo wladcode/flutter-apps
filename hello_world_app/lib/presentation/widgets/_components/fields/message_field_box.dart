@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 
-class MessageFieldBox extends StatelessWidget {
+class MessageFieldBox extends StatefulWidget {
   final ValueChanged<String> onValue;
   const MessageFieldBox({super.key, required this.onValue});
 
   @override
+  State<MessageFieldBox> createState() => _MessageFieldBoxState();
+}
+
+class _MessageFieldBoxState extends State<MessageFieldBox> {
+  final TextEditingController _textController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-
-    final textController = TextEditingController();
-    final focusNode = FocusNode();
 
     final outlineBorder = UnderlineInputBorder(
       borderSide: BorderSide(color: colors.outline),
@@ -17,10 +29,10 @@ class MessageFieldBox extends StatelessWidget {
     );
 
     return TextFormField(
-      controller: textController,
-      focusNode: focusNode,
+      controller: _textController,
+      focusNode: _focusNode,
       onTapOutside: (event) {
-        focusNode.unfocus();
+        _focusNode.unfocus();
       },
       decoration: InputDecoration(
         enabledBorder: outlineBorder,
@@ -28,20 +40,19 @@ class MessageFieldBox extends StatelessWidget {
         filled: true,
         suffixIcon: IconButton(
           onPressed: () {
-            final textValue = textController.text;
-            onValue(textValue);
-            textController.clear();
+            final textValue = _textController.text;
+            widget.onValue(textValue);
+            _textController.clear();
           },
           icon: Icon(Icons.send_outlined),
         ),
         hintText: 'End message with ?',
       ),
-
       onFieldSubmitted: (value) {
-        onValue(value);
-        textController.clear();
-        focusNode.requestFocus();
-      }
+        widget.onValue(value);
+        _textController.clear();
+        _focusNode.requestFocus();
+      },
     );
   }
 }

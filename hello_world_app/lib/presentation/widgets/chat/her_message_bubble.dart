@@ -19,7 +19,7 @@ class HerMessageBubble extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
-              '${message.fromWho.name}: ${message.text}',
+              message.text,
               style: TextStyle(color: Colors.black),
             ),
           ),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hello_world_app/config/theme/app_theme.dart';
 import 'package:hello_world_app/presentation/screens/chat/chat_screen.dart';
-import 'package:hello_world_app/presentation/screens/new_yes_no_screen.dart';
-import 'package:hello_world_app/state/inherite/appStateWidget.dart';
 import 'package:hello_world_app/state/provider/chat_provider.dart';
 import 'package:provider/provider.dart';
 

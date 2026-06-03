@@ -10,8 +10,11 @@ class VideoBackground extends StatelessWidget {
       Colors.black26,
       Colors.black87,
     ],
-    this.customStops = const [0.5, 0.75, 1.0],
-    }):assert(customColors.length == customStops.length, 'customColors and customStops must have the same length');
+    this.customStops = const [0.0, 0.5, 1.0],
+  }) : assert(
+          customColors.length == customStops.length,
+          'customColors and customStops must have the same length',
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +29,6 @@ class VideoBackground extends StatelessWidget {
           ),
         ),
       ),
-      );
+    );
   }
 }

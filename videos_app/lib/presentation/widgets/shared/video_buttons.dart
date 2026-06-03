@@ -10,11 +10,26 @@ class VideoButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _CustomIconButton(icon: Icons.favorite, iconColor: Colors.red, value: videoPost.likes),
+        _CustomIconButton(
+          icon: Icons.favorite,
+          iconColor: Colors.red,
+          value: videoPost.likes,
+          label: 'likes',
+        ),
         const SizedBox(height: 10),
-        _CustomIconButton(icon: Icons.comment, iconColor: Colors.blue, value: videoPost.comments),
+        _CustomIconButton(
+          icon: Icons.comment,
+          iconColor: Colors.blue,
+          value: videoPost.comments,
+          label: 'comments',
+        ),
         const SizedBox(height: 10),
-        _CustomIconButton(icon: Icons.remove_red_eye_outlined, iconColor: Colors.green, value: videoPost.views),
+        _CustomIconButton(
+          icon: Icons.remove_red_eye_outlined,
+          iconColor: Colors.green,
+          value: videoPost.views,
+          label: 'views',
+        ),
       ],
     );
   }
@@ -24,14 +39,33 @@ class _CustomIconButton extends StatelessWidget {
   final IconData icon;
   final Color? color;
   final int value;
-  const _CustomIconButton({required this.icon, required this.value, Color? iconColor})
-  : color = iconColor ?? Colors.white;
+  final String label;
+
+  const _CustomIconButton({
+    required this.icon,
+    required this.value,
+    required this.label,
+    Color? iconColor,
+  }) : color = iconColor ?? Colors.white;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        IconButton(onPressed: () {}, icon: Icon(icon, color: color,)),
+        IconButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '${HumanFormats.humanReadableNumber(value.toDouble())} $label',
+                ),
+                duration: const Duration(seconds: 1),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          },
+          icon: Icon(icon, color: color),
+        ),
         Text(HumanFormats.humanReadableNumber(value.toDouble())),
       ],
     );

@@ -14,11 +14,15 @@ class DiscoverScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Discover'),
+        title: const Text('Discover'),
       ),
-      body: initialLoading 
-      ? const Center(child: CircularProgressIndicator()) 
-      : VideoScrollableView(videos: videos)
+      body: initialLoading
+          ? const Center(child: CircularProgressIndicator())
+          : videos.isEmpty
+              ? const Center(
+                  child: Text('No videos available'),
+                )
+              : VideoScrollableView(videos: videos),
     );
   }
 }

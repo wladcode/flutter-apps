@@ -4,18 +4,35 @@ import 'package:videos_app/infrastructure/models/local_video_model.dart';
 import 'package:videos_app/shared/data/local_video_post.dart';
 
 class DiscoverProvider extends ChangeNotifier {
-  // TODO: Repository, DataSource
+  static const int pageSize = 3;
 
   bool initialLoading = true;
-  List<VideoPost> videos = [];
+  bool isLoadingMore = false;
+  final List<VideoPost> _videos = [];
+  int _loadedPages = 0;
 
+  List<VideoPost> get videos => List.unmodifiable(_videos);
 
- Future<void> loadNextPage() async {
-  //await Future.delayed(const Duration(seconds: 2));
-  final List<VideoPost> newVideos = videoPosts.map((video) => LocalVideoModel.fromJson(video).toVideoPostEntity()).toList();
-  
-  videos.addAll(newVideos);
-  initialLoading = false;
-  notifyListeners();
- }
+  bool get hasMore => _loadedPages * pageSize < videoPosts.length;
+
+  Future<void> loadNextPage() async {
+    if (isLoadingMore || !hasMore) return;
+
+    isLoadingMore = true;
+    notifyListeners();
+
+    final start = _loadedPages * pageSize;
+    final end = (start + pageSize).clamp(0, videoPosts.length);
+    final slice = videoPosts.sublist(start, end);
+
+    final newVideos = slice
+        .map((video) => LocalVideoModel.fromJson(video).toVideoPostEntity())
+        .toList();
+
+    _videos.addAll(newVideos);
+    _loadedPages++;
+    initialLoading = false;
+    isLoadingMore = false;
+    notifyListeners();
+  }
 }

@@ -9,87 +9,104 @@ class NavigationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => new _NotificationModel(),
+      create: (_) => _NotificationModel(),
       child: Scaffold(
-        appBar: AppBar(title: Text('Navigation Screen')),
+        appBar: AppBar(title: const Text('Navigation Screen')),
         floatingActionButton: _ButtonFlotante(),
-
-
-      
-        bottomNavigationBar: _BottomNavigationBar()
-        
+        bottomNavigationBar: _BottomNavigationBar(),
       ),
     );
   }
 }
 
 class _ButtonFlotante extends StatelessWidget {
-  const _ButtonFlotante({super.key});
+  const _ButtonFlotante();
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(onPressed: () {
-      final model = Provider.of<_NotificationModel>(context, listen: false);
-      final numero = model.notificationCount;
-      model.incrementNotificationCount();
-
-      if (numero >= 2) {
-        final bounceController = model.bounceController;
-        bounceController?.forward(from: 0.0);
-      }
-    }, child: Icon(Icons.add));
-  }
-}
-
-class _BottomNavigationBar extends StatelessWidget {
-  const _BottomNavigationBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final notificationCount = Provider.of<_NotificationModel>(context).notificationCount;
-    return BottomNavigationBar(
-      
-        currentIndex: 0,
-          //selectedItemColor: Colors.red,
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-            //BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-            BottomNavigationBarItem(
-              label: 'Notifications',
-              icon: Stack(
-                children: [
-                  FaIcon(FontAwesomeIcons.bell),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    //child: Icon(Icons.brightness_1, size: 12, color: Colors.red),
-                    child: BounceInDown(
-                      from: 15,
-                      animate: notificationCount > 0 ? true : false,
-                      child: Bounce(
-                        controller: (controller) => Provider.of<_NotificationModel>(context).bounceController = controller,
-                        from: 15,
-                        child: Container(
-                          child: Text('$notificationCount', style: TextStyle(fontSize: 7, color: Colors.white),),
-                          width: 12, height: 12,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                                           ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    return FloatingActionButton(
+      onPressed: () {
+        final model = context.read<_NotificationModel>();
+        model.incrementNotificationCount();
+        if (model.notificationCount >= 2) {
+          model.bounceController?.forward(from: 0.0);
+        }
+      },
+      child: const Icon(Icons.add),
     );
   }
 }
 
+class _BottomNavigationBar extends StatelessWidget {
+  const _BottomNavigationBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      currentIndex: 0,
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+        BottomNavigationBarItem(
+          label: 'Notifications',
+          icon: _NotificationIcon(),
+        ),
+      ],
+    );
+  }
+}
+
+class _NotificationIcon extends StatefulWidget {
+  const _NotificationIcon();
+
+  @override
+  State<_NotificationIcon> createState() => _NotificationIconState();
+}
+
+class _NotificationIconState extends State<_NotificationIcon> {
+  @override
+  Widget build(BuildContext context) {
+    final notificationCount =
+        context.watch<_NotificationModel>().notificationCount;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        const FaIcon(FontAwesomeIcons.bell),
+        if (notificationCount > 0)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: BounceInDown(
+              from: 15,
+              animate: true,
+              child: Bounce(
+                controller: (controller) {
+                  context
+                      .read<_NotificationModel>()
+                      .setBounceController(controller);
+                },
+                from: 15,
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    '$notificationCount',
+                    style: const TextStyle(fontSize: 7, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
 
 class _NotificationModel extends ChangeNotifier {
   int notificationCount = 0;
@@ -102,7 +119,8 @@ class _NotificationModel extends ChangeNotifier {
 
   AnimationController? get bounceController => _bounceController;
 
-  set bounceController(AnimationController controller) {
+  void setBounceController(AnimationController controller) {
+    if (_bounceController == controller) return;
     _bounceController = controller;
   }
 }

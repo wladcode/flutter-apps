@@ -1,17 +1,32 @@
 # videos_app
 
-A new Flutter project.
+A Flutter vertical video feed demo (TikTok-style discover screen).
 
-## Getting Started
+## Setup
 
-This project is a starting point for a Flutter application.
+1. Install dependencies:
 
-A few resources to get you started if this is your first Flutter project:
+   ```bash
+   flutter pub get
+   ```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+2. Add video files under `assets/videos/` (see [assets/videos/README.md](assets/videos/README.md)). Without them, the feed loads but players show an error state.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. Run:
+
+   ```bash
+   flutter run
+   ```
+
+## Features
+
+- Discover feed with paginated local data (`DiscoverProvider`)
+- Vertical `PageView` with lazy video initialization (only the active page loads a decoder)
+- Animation demo screens under `lib/presentation/screens/animations/`
+
+## Tests
+
+```bash
+flutter test
+flutter analyze
+```

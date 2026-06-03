@@ -5,7 +5,7 @@ import 'package:hello_world_app/state/inherite/appStateScope.dart';
 
 class AppStateWidget extends StatefulWidget {
   final Widget child;
-  AppStateWidget({required this.child});
+  const AppStateWidget({super.key, required this.child});
 
   
 

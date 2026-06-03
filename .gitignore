@@ -26,4 +26,4 @@ ios/Flutter/Flutter.podspec
 ios/Runner.xcodeproj/xcuserdata/
 
 # Video assets (large files, not uploaded)
-**/assets/videos/
+**/assets/videos/*.mp4

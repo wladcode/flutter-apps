@@ -4,11 +4,11 @@ import 'package:hello_world_app/state/inherite/appState.dart';
 class AppStateScope extends InheritedWidget {
   final AppState appState;
 
-  AppStateScope(
+  const AppStateScope(
     this.appState, {
-    Key? key,
-    required Widget child,
-  }) : super(key: key, child: child);
+    super.key,
+    required super.child,
+  });
   
   @override
   bool updateShouldNotify(AppStateScope oldWidget) {

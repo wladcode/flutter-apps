@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:videos_app/config/constants/video_feed_constants.dart';
 import 'package:videos_app/domain/entities/video_post.dart';
-import 'package:videos_app/infrastructure/models/local_video_model.dart';
-import 'package:videos_app/shared/data/local_video_post.dart';
+import 'package:videos_app/domain/repositories/video_post_repository.dart';
 
 class DiscoverProvider extends ChangeNotifier {
-  static const int pageSize = 3;
+  final VideoPostRepository videoPostRepository;
+  static const int pageSize = VideoFeedConstants.pageSize;
 
   bool initialLoading = true;
   bool isLoadingMore = false;
+  bool hasMore = true;
   final List<VideoPost> _videos = [];
-  int _loadedPages = 0;
+  int _loadedOffset = 0;
+
+  DiscoverProvider({required this.videoPostRepository});
 
   List<VideoPost> get videos => List.unmodifiable(_videos);
-
-  bool get hasMore => _loadedPages * pageSize < videoPosts.length;
 
   Future<void> loadNextPage() async {
     if (isLoadingMore || !hasMore) return;
@@ -21,16 +23,12 @@ class DiscoverProvider extends ChangeNotifier {
     isLoadingMore = true;
     notifyListeners();
 
-    final start = _loadedPages * pageSize;
-    final end = (start + pageSize).clamp(0, videoPosts.length);
-    final slice = videoPosts.sublist(start, end);
-
-    final newVideos = slice
-        .map((video) => LocalVideoModel.fromJson(video).toVideoPostEntity())
-        .toList();
+    final newVideos =
+        await videoPostRepository.getTrendingVideosByPage(_loadedOffset);
 
     _videos.addAll(newVideos);
-    _loadedPages++;
+    _loadedOffset += newVideos.length;
+    hasMore = newVideos.length == pageSize;
     initialLoading = false;
     isLoadingMore = false;
     notifyListeners();

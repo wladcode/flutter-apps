@@ -46,6 +46,13 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
     }
   }
 
+  VideoPlayerController _createController(String url) {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return VideoPlayerController.networkUrl(Uri.parse(url));
+    }
+    return VideoPlayerController.asset(url);
+  }
+
   void _ensureController() {
     if (_controller != null) {
       if (widget.isActive && _controller!.value.isInitialized) {
@@ -54,7 +61,7 @@ class _FullscreenPlayerState extends State<FullscreenPlayer> {
       return;
     }
 
-    final controller = VideoPlayerController.asset(widget.videoUrl)
+    final controller = _createController(widget.videoUrl)
       ..setLooping(true)
       ..setVolume(0);
     _controller = controller;

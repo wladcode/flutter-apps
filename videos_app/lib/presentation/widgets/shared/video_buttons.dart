@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:videos_app/config/helpers/human_formats.dart';
 import 'package:videos_app/domain/entities/video_post.dart';
@@ -13,10 +12,7 @@ class VideoButtons extends StatelessWidget {
       children: [
         _CustomIconButton(icon: Icons.favorite, iconColor: Colors.red, value: videoPost.likes),
         const SizedBox(height: 10),
-        SpinPerfect(
-          infinite: true,
-          duration: const Duration(seconds: 5),
-          child: _CustomIconButton(icon: Icons.comment, iconColor: Colors.blue, value: videoPost.comments)),
+        _CustomIconButton(icon: Icons.comment, iconColor: Colors.blue, value: videoPost.comments),
         const SizedBox(height: 10),
         _CustomIconButton(icon: Icons.remove_red_eye_outlined, iconColor: Colors.green, value: videoPost.views),
       ],

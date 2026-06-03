@@ -1,76 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 import 'package:videos_app/domain/entities/video_post.dart';
 import 'package:videos_app/presentation/widgets/shared/video_buttons.dart';
+import 'package:videos_app/presentation/widgets/video/fullscreen_player.dart';
 
-class VideoScrollableView extends StatelessWidget {
+class VideoScrollableView extends StatefulWidget {
   final List<VideoPost> videos;
   const VideoScrollableView({super.key, required this.videos});
 
   @override
-  Widget build(BuildContext context) {
-    return PageView.builder(
-      scrollDirection: Axis.vertical,
-      physics: const BouncingScrollPhysics(),
-      itemCount: videos.length,
-      itemBuilder: (context, index) {
-        final videoPost = videos[index];
-        return Stack(
-          children: [
-            _VideoPlayerWidget(videoUrl: videoPost.videoUrl),
-            Positioned(bottom: 10, right: 10, child: VideoButtons(videoPost: videoPost)),
-          ],
-        );
-      },
-    );
-  }
+  State<VideoScrollableView> createState() => _VideoScrollableViewState();
 }
 
-class _VideoPlayerWidget extends StatefulWidget {
-  final String videoUrl;
-  const _VideoPlayerWidget({required this.videoUrl});
-
-  @override
-  State<_VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
-}
-
-class _VideoPlayerWidgetState extends State<_VideoPlayerWidget> {
-  late VideoPlayerController _controller;
+class _VideoScrollableViewState extends State<VideoScrollableView> {
+  late PageController _pageController;
+  int _currentPage = 0;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset(widget.videoUrl)
-      ..setLooping(true)
-      ..setVolume(0)
-      ..initialize().then((_) {
-        if (mounted) {
-          setState(() {});
-          _controller.play();
-        }
-      });
+    _pageController = PageController();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_controller.value.isInitialized) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    return SizedBox.expand(
-      child: FittedBox(
-        fit: BoxFit.cover,
-        child: SizedBox(
-          width: _controller.value.size.width,
-          height: _controller.value.size.height,
-          child: VideoPlayer(_controller),
-        ),
-      ),
+    return PageView.builder(
+      controller: _pageController,
+      scrollDirection: Axis.vertical,
+      physics: const BouncingScrollPhysics(),
+      itemCount: widget.videos.length,
+      onPageChanged: (page) => setState(() => _currentPage = page),
+      itemBuilder: (context, index) {
+        final videoPost = widget.videos[index];
+        return Stack(
+          key: ValueKey('video_$index'),
+          children: [
+            SizedBox.expand(
+              child: FullscreenPlayer(
+                key: ValueKey(videoPost.videoUrl),
+                videoUrl: videoPost.videoUrl,
+                caption: videoPost.caption,
+                isActive: index == _currentPage,
+              ),
+            ),
+            Positioned(
+              bottom: 40,
+              right: 20,
+              child: VideoButtons(videoPost: videoPost),
+            ),
+          ],
+        );
+      },
     );
   }
 }

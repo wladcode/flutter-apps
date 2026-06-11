@@ -1,24 +1,39 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:widgets_app/config/menu/menu_items.dart';
 import 'package:widgets_app/presentation/screens/screens.dart';
 
-// GoRouter configuration
+typedef AppScreenBuilder = Widget Function();
+
+final Map<String, AppScreenBuilder> _screenBuilders = {
+  HomeScreen.name: () => const HomeScreen(),
+  ButtonsScreen.name: () => const ButtonsScreen(),
+  CardScreen.name: () => const CardScreen(),
+  AnimatedScreen.name: () => const AnimatedScreen(),
+  TutorialScreen.name: () => const TutorialScreen(),
+  InfiniteScrollScreen.name: () => const InfiniteScrollScreen(),
+  ProgressScreen.name: () => const ProgressScreen(),
+  SnackbarScreen.name: () => const SnackbarScreen(),
+  UiControlsScreen.name: () => const UiControlsScreen(),
+};
+
+List<GoRoute> _buildRoutesFromMenu(List<MenuItem> items) {
+  return items.map((item) {
+    final builder = _screenBuilders[item.routeName];
+
+    if (builder == null) {
+      throw Exception('No screen registered for route: ${item.routeName}');
+    }
+
+    return GoRoute(
+      path: item.link,
+      name: item.routeName,
+      builder: (context, state) => builder(),
+    );
+  }).toList();
+}
+
 final appRouter = GoRouter(
   initialLocation: '/',
-  routes: [
-    GoRoute(
-      path: '/',
-      name: HomeScreen.name,
-      builder: (context, state) => const HomeScreen(),
-    ),
-    GoRoute(
-      path: '/buttons',
-      name: ButtonsScreen.name,
-      builder: (context, state) => const ButtonsScreen(),
-    ),
-    GoRoute(
-      path: '/cards',
-      name: CardScreen.name,
-      builder: (context, state) => const CardScreen(),
-    ),
-  ],
+  routes: _buildRoutesFromMenu(appMenuItems),
 );

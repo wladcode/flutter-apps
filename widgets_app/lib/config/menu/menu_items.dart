@@ -40,13 +40,7 @@ const appMenuItems = <MenuItem>[
     link: '/cards',
     routeName: 'cards_screen',
   ),
-  MenuItem(
-    title: 'Animated',
-    subTitle: 'Animated screen',
-    icon: Icons.animation,
-    link: '/animated',
-    routeName: 'animated_screen',
-  ),
+
   MenuItem(
     title: 'Tutorial',
     subTitle: 'Tutorial screen',
@@ -81,5 +75,12 @@ const appMenuItems = <MenuItem>[
     icon: Icons.settings,
     link: '/ui-controls',
     routeName: 'ui_controls_screen',
+  ),
+  MenuItem(
+    title: 'Animated container',
+    subTitle: 'Stateful widget animado',
+    icon: Icons.animation,
+    link: '/animated',
+    routeName: 'animated_screen',
   ),
 ];

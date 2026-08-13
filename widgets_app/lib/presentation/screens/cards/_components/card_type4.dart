@@ -5,7 +5,7 @@ class CardType4 extends StatelessWidget {
   final String image;
   final String description;
   final double elevation;
-  const CardType4({
+  const CardType4({super.key, 
     required this.title,
     required this.image,
     required this.description,
